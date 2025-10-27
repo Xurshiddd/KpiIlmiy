@@ -19,9 +19,10 @@ class TaskForm
                     ->numeric(),
                 Select::make('quarter')
                     ->options([1 => '1', '2', '3', '4'])
+                    ->name('Chorak')
                     ->required(),
                 TextInput::make('user_id')
-                    ->numeric()
+                    ->nullable()
                     ->default(null),
             ]);
     }
