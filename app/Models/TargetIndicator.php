@@ -18,4 +18,8 @@ class TargetIndicator extends Model
     {
         return $this->belongsTo(PriorityTask::class);
     }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

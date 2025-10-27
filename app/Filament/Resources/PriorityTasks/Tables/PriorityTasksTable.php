@@ -16,8 +16,8 @@ class PriorityTasksTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Vazifa nomi')->sortable()->searchable(),
-                TextColumn::make('description')->label('Tavsifi')->sortable()->searchable(),
+                TextColumn::make('name')->label('Vazifa nomi')->sortable()->limit(50)->searchable(),
+                TextColumn::make('description')->label('Tavsifi')->limit(50)->sortable()->searchable(),
                 ToggleColumn::make('status')->label('Faolmi?')->sortable(),
             ])
             ->filters([
