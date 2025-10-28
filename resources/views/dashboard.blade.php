@@ -391,7 +391,6 @@
 
 <body>
     <div class="container">
-
         <!-- Header -->
         <div class="header-section">
             <div class="header-label">Faculty Profile</div>
@@ -505,7 +504,7 @@
                             </div>
                             <div>
                                 <h3 class="position-title">{{ $info->department_name }}</h3>
-                                <p class="position-subtitle">{{ $info->employmentForm }}</p>
+                                <p class="position-subtitle">{{ $info->staffPosition }}</p>
                             </div>
                         </div>
                         <span class="badge-status">{{ $info->employeeStatus }}</span>
@@ -521,7 +520,7 @@
                             </svg>
                             <div class="detail-content">
                                 <div class="detail-label">Job Type</div>
-                                <div class="detail-value">{{ $user->staffPosition }}</div>
+                                <div class="detail-value">{{ $info->employmentForm }}</div>
                             </div>
                         </div>
 
@@ -534,7 +533,7 @@
                             </svg>
                             <div class="detail-content">
                                 <div class="detail-label">Rate</div>
-                                <div class="detail-value">{{ $user->employmentStaff }}</div>
+                                <div class="detail-value">{{ $info->employmentStaff }}</div>
                             </div>
                         </div>
                     </div>
