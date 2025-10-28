@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('attachments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->foreignId('target_indicator_id')->constrained()->onDelete('cascade');
-            $table->enum('quarter', ['1', '2', '3', '4']);
-            $table->foreignId('user_id')->nullable()->constrained();
+            $table->string('extra_identifier')->nullable();
+            $table->string('title')->nullable();
+            $table->string('path');
+            $table->string('size');
+            $table->string('type')->nullable();
+            $table->nullableMorphs('attachment');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('attachments');
     }
 };
