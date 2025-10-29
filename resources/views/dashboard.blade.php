@@ -28,7 +28,7 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <div class="min-h-screen py-8 px-4">
-        <div class=" mx-auto">
+        <div class="mx-auto">
             <!-- Profile Card -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
                 <!-- Header with gradient -->

@@ -51,4 +51,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserInfo::class, 'user_id');
     }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'user_id');
+    }
+    public function merges()
+    {
+        return $this->hasMany(Merge::class);
+    }
+
+    public function targetIndicators()
+    {
+        return $this->belongsToMany(TargetIndicator::class, 'merges')
+            ->withTimestamps();
+    }
+
 }
