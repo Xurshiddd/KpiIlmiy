@@ -8,8 +8,9 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        $user = auth()->user();
-        User::with(['tasks', 'infos'])->find($user->id);
-        return view('dashboard');
+        $u = auth()->user();
+        $user = User::with(['tasks', 'infos', 'targetIndicators'])->find($u->id);
+        // dd($user);
+        return view('dashboard', compact('user'));
     }
 }

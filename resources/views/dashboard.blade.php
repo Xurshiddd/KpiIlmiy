@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="uz">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,16 +27,20 @@
         }
     </script>
 </head>
+
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <div class="min-h-screen py-8 px-4">
         <div class="mx-auto">
             <!-- Profile Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
                 <!-- Header with gradient -->
-                <div class="relative h-40 bg-gradient-to-r from-primary-500 to-primary-700 dark:from-primary-700 dark:to-primary-900">
+                <div
+                    class="relative h-40 bg-gradient-to-r from-primary-500 to-primary-700 dark:from-primary-700 dark:to-primary-900">
                     <div class="absolute inset-0 bg-black/10 dark:bg-black/20"></div>
                     <div class="absolute bottom-4 right-6">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/90 dark:bg-gray-800/90 text-primary-700 dark:text-primary-300 backdrop-blur-sm">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/90 dark:bg-gray-800/90 text-primary-700 dark:text-primary-300 backdrop-blur-sm">
                             <i class="fas fa-user-circle mr-1"></i>
                             {{ ucfirst($user->type) }}
                         </span>
@@ -47,22 +52,27 @@
                     <!-- Profile Image and Basic Info -->
                     <div class="flex flex-col md:flex-row items-center -mt-20 md:-mt-16">
                         <div class="relative">
-                            <img src="{{ $user->avatar ? asset('storage/'.$user->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=0ea5e9&color=fff&size=128' }}"
-                                 alt="Profile Photo"
-                                 class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-gray-800 shadow-xl object-cover z-10 relative bg-white">
-                            <div class="absolute -inset-2 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-md opacity-30"></div>
+                            <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0ea5e9&color=fff&size=128' }}"
+                                alt="Profile Photo"
+                                class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-gray-800 shadow-xl object-cover z-10 relative bg-white">
+                            <div
+                                class="absolute -inset-2 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full blur-md opacity-30">
+                            </div>
                         </div>
 
                         <div class="mt-4 md:mt-0 md:ml-6 text-center md:text-left flex-1">
                             <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
                                 {{ $user->first_name }} {{ $user->last_name }}
                             </h2>
-                            <div class="mt-2 flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
-                                <div class="flex items-center justify-center md:justify-start text-gray-600 dark:text-gray-400">
+                            <div
+                                class="mt-2 flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
+                                <div
+                                    class="flex items-center justify-center md:justify-start text-gray-600 dark:text-gray-400">
                                     <i class="fas fa-envelope mr-2 text-primary-500"></i>
                                     <span>{{ $user->email }}</span>
                                 </div>
-                                <div class="flex items-center justify-center md:justify-start text-gray-600 dark:text-gray-400">
+                                <div
+                                    class="flex items-center justify-center md:justify-start text-gray-600 dark:text-gray-400">
                                     <i class="fas fa-phone mr-2 text-primary-500"></i>
                                     <span>{{ $user->phone }}</span>
                                 </div>
@@ -81,27 +91,35 @@
                         </div>
 
                         @forelse($user->infos as $info)
-                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl p-5 mb-5 transition-all duration-300 hover:shadow-md border border-gray-200 dark:border-gray-700">
+                            <div
+                                class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl p-5 mb-5 transition-all duration-300 hover:shadow-md border border-gray-200 dark:border-gray-700">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Department & Employment Form -->
                                     <div class="space-y-4">
                                         <div class="flex items-start">
-                                            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
+                                            <div
+                                                class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
                                                 <i class="fas fa-building text-primary-600 dark:text-primary-400"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Bo'lim nomi</p>
-                                                <p class="font-semibold text-gray-800 dark:text-gray-200">{{ $info->department_name }}</p>
+                                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Bo'lim
+                                                    nomi</p>
+                                                <p class="font-semibold text-gray-800 dark:text-gray-200">
+                                                    {{ $info->department_name }}</p>
                                             </div>
                                         </div>
 
                                         <div class="flex items-start">
-                                            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
-                                                <i class="fas fa-file-contract text-primary-600 dark:text-primary-400"></i>
+                                            <div
+                                                class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
+                                                <i
+                                                    class="fas fa-file-contract text-primary-600 dark:text-primary-400"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Ish shakli</p>
-                                                <p class="font-semibold text-gray-800 dark:text-gray-200">{{ $info->employmentForm }}</p>
+                                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Ish
+                                                    shakli</p>
+                                                <p class="font-semibold text-gray-800 dark:text-gray-200">
+                                                    {{ $info->employmentForm }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -109,39 +127,48 @@
                                     <!-- Position & Status & Code -->
                                     <div class="space-y-4">
                                         <div class="flex items-start">
-                                            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
+                                            <div
+                                                class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
                                                 <i class="fas fa-user-tie text-primary-600 dark:text-primary-400"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Lavozimi</p>
-                                                <p class="font-semibold text-gray-800 dark:text-gray-200">{{ $info->staffPosition }}</p>
+                                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Lavozimi
+                                                </p>
+                                                <p class="font-semibold text-gray-800 dark:text-gray-200">
+                                                    {{ $info->staffPosition }}</p>
                                             </div>
                                         </div>
 
                                         <div class="flex items-start">
-                                            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
+                                            <div
+                                                class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
                                                 <i class="fas fa-user-check text-primary-600 dark:text-primary-400"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Xodim holati</p>
-                                                <p class="font-semibold text-gray-800 dark:text-gray-200">{{ $info->employeeStatus }}</p>
+                                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Xodim
+                                                    holati</p>
+                                                <p class="font-semibold text-gray-800 dark:text-gray-200">
+                                                    {{ $info->employeeStatus }}</p>
                                             </div>
                                         </div>
 
                                         <div class="flex items-start">
-                                            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
+                                            <div
+                                                class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-3">
                                                 <i class="fas fa-code text-primary-600 dark:text-primary-400"></i>
                                             </div>
                                             <div>
                                                 <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Kod</p>
-                                                <p class="font-semibold text-gray-800 dark:text-gray-200">{{ $info->code }}</p>
+                                                <p class="font-semibold text-gray-800 dark:text-gray-200">
+                                                    {{ $info->code }}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center py-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700">
+                            <div
+                                class="text-center py-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700">
                                 <i class="fas fa-inbox text-4xl text-gray-400 dark:text-gray-500 mb-3"></i>
                                 <p class="text-gray-600 dark:text-gray-400">Ish joyi ma'lumotlari mavjud emas.</p>
                             </div>
@@ -149,7 +176,52 @@
                     </div>
                 </div>
             </div>
-
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl mt-6">
+                @if ($user->tasks->isNotEmpty())
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Vazifalar</h3>
+                    <ul class="space-y-4">
+                        @foreach ($user->tasks as $task)
+                            <li class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white">{{ $task->title }}</h4>
+                                <span class="mt-2 text-gray-600 dark:text-gray-300">{{ $task->description }}</span>
+                                <form action="">
+                                    <input type="file" class="mt-3 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" placeholder="Qiymat kiriting">
+                                    <button type="submit" class="mt-3 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300">Yuklash</button>
+                                </form>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @else
+                <div class="p-6 text-center">
+                    <i class="fas fa-inbox text-4xl text-gray-400 dark:text-gray-500 mb-3"></i>
+                    <p class="text-gray-600 dark:text-gray-400">Vazifalar mavjud emas.</p>
+                </div>
+                @endif
+                @if ($user->targetIndicators->isNotEmpty())
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Maqsad Ko'rsatkichlari</h3>
+                    <ul class="space-y-4">
+                        @foreach ($user->targetIndicators as $indicator)
+                            <li class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white">{{ $indicator->title }}</h4>
+                                <span class="mt-2 text-gray-600 dark:text-gray-300">{{ $indicator->description }}</span>
+                                <form action="">
+                                    <input type="file" class="mt-3 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" placeholder="Qiymat kiriting">
+                                    <button type="submit" class="mt-3 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300">Yuklash</button>
+                                </form>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @else
+                <div class="p-6 text-center">
+                    <i class="fas fa-inbox text-4xl text-gray-400 dark:text-gray-500 mb-3"></i>
+                    <p class="text-gray-600 dark:text-gray-400">Maqsad ko'rsatkichlari mavjud emas.</p>
+                </div>
+                @endif
+            </div>
             <!-- Additional Info Section (if needed in the future) -->
             <div class="mt-6 text-center text-gray-500 dark:text-gray-400 text-sm">
                 <p>Profil yangilandi: {{ now()->format('d.m.Y') }}</p>
@@ -157,9 +229,9 @@
         </div>
     </div>
 
-    <!-- Dark Mode Toggle (for demonstration) -->
     <div class="fixed bottom-4 right-4">
-        <button id="themeToggle" class="p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">
+        <button id="themeToggle"
+            class="p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">
             <i class="fas fa-moon dark:hidden"></i>
             <i class="fas fa-sun hidden dark:block"></i>
         </button>
@@ -172,4 +244,5 @@
         });
     </script>
 </body>
+
 </html>

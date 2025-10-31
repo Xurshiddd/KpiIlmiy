@@ -15,24 +15,28 @@ class TasksTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('target_indicator_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('quarter')
-                    ->badge(),
-                TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('id')
+                ->label('ID')
+                ->sortable(),
+
+            TextColumn::make('targetIndicator.name')
+                ->label('Target Indicator')
+                ->searchable(),
+
+            TextColumn::make('user.name')
+                ->label('Foydalanuvchi')
+                ->searchable(),
+
+            TextColumn::make('created_at')
+                ->label('Yaratilgan vaqt')
+                ->dateTime()
+                ->sortable(),
+
+            TextColumn::make('updated_at')
+                ->label('Yangilangan vaqt')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
