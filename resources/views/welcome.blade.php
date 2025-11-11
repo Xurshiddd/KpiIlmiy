@@ -54,8 +54,14 @@
                             placeholder="Maqola qidirish..." />
                         <button type="submit" class="ml-2 text-sm">Qidir</button>
                     </form>
-                    <a href="{{ route('hemis.redirect') }}"
-                        class="inline-flex items-center px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50">Kirish</a>
+                    @if (auth()->check())
+                        <a href="{{ route('dashboard') }}"
+                            class="inline-flex items-center px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50">Dashboard</a>
+                    @else
+                        <a href="{{ route('hemis.redirect') }}"
+                            class="inline-flex items-center px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50">Kirish</a>
+
+                    @endif
                     <a href="/admin/login"
                         class="inline-flex items-center px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50">Admin</a>
                 </div>

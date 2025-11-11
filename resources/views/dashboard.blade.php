@@ -38,7 +38,7 @@
                 <div
                     class="relative h-40 bg-gradient-to-r from-primary-500 to-primary-700 dark:from-primary-700 dark:to-primary-900">
                     <div class="absolute inset-0 bg-black/10 dark:bg-black/20"></div>
-                    <div class="absolute bottom-4 right-6">
+                    <div class="absolute bottom-4 right-6 flex items-center">
                         <span
                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/90 dark:bg-gray-800/90 text-primary-700 dark:text-primary-300 backdrop-blur-sm">
                             <i class="fas fa-user-circle mr-1"></i>
@@ -79,9 +79,19 @@
                             </div>
                         </div>
                     </div>
-
+                    <span>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" style="cursor: pointer!important;"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 backdrop-blur-sm ml-2">
+                                <i class="fas fa-sign-out-alt mr-1"></i>
+                                Chiqish
+                            </button>
+                        </form>
+                    </span>
                     <!-- Divider -->
-                    <div class="mt-8 border-t border-gray-200 dark:border-gray-700"></div>
+                    <div class="mt-8 border-t border-gray-200 dark:border-gray-700">
+                    </div>
 
                     <!-- Work Information Section -->
                     <div class="mt-8">
@@ -176,51 +186,157 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl mt-6">
-                @if ($user->tasks->isNotEmpty())
-                <div class="p-6">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Vazifalar</h3>
-                    <ul class="space-y-4">
-                        @foreach ($user->tasks as $task)
-                            <li class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white">{{ $task->title }}</h4>
-                                <span class="mt-2 text-gray-600 dark:text-gray-300">{{ $task->description }}</span>
-                                <form action="">
-                                    <input type="file" class="mt-3 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" placeholder="Qiymat kiriting">
-                                    <button type="submit" class="mt-3 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300">Yuklash</button>
-                                </form>
-                            </li>
-                        @endforeach
-                    </ul>
+            <div
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl mt-6">
+                <!-- tab card -->
+                <div class="px-6 py-4" id="profileTabs">
+                    <div class="border-b border-gray-200 dark:border-gray-700">
+                        <nav class="-mb-px flex space-x-6" aria-label="Tabs" role="tablist">
+                            <button role="tab" data-tab="overview"
+                                class="py-2 px-3 border-b-2 border-primary-500 text-primary-600 font-medium text-sm"
+                                aria-selected="true">Maqsad ko'rsatkichlar</button>
+                            <button role="tab" data-tab="activities"
+                                class="py-2 px-3 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                                aria-selected="false">Activities</button>
+                            <button role="tab" data-tab="settings"
+                                class="py-2 px-3 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                                aria-selected="false">Settings</button>
+                        </nav>
+                    </div>
+
+                    <div class="mt-4">
+                        <div data-content="overview" class="">
+                            <p class="text-gray-600 dark:text-gray-400">Qo'shimcha ma'lumotlar uchun bo'lim tanlang.</p>
+                            <!-- Example overview content -->
+                            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div
+                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    @foreach ($user->targetIndicators as $indicator)
+                                        <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
+                                            {{ $indicator->name }}</p>
+                                        <hr>
+                                        <form action="" class="m-3">
+                                            @csrf
+                                            <input type="file" name="target_indicator_{{ $indicator->id }}">
+                                            <button
+                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Yuklash</button>
+                                        </form>
+                                    @endforeach
+                                </div>
+                                <div
+                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') - 1 }} -
+                                        Yil</p>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">34</p>
+                                </div>
+                                <div
+                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') }} - Yil
+                                    </p>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">34</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div data-content="activities" class="hidden">
+                            <!-- Example activities list -->
+                            @foreach ($user->targetIndicators as $indicator)
+                                <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                                    {{ $indicator->name }}</h2>
+
+
+                            <ul class="space-y-3">
+                                @for ($i = 1; $i < 5; $i++)
+                                {{-- @foreach ($user->targetIndicators->tasks as $task) --}}
+                                    <h3 class="text-gray-600 dark:text-gray-400">{{ $i }} - chorak</h3>
+                                    <li class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                        <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
+                                            <form action="" class="w-full md:w-1/3 flex items-center gap-3 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-3"
+                                                enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="file" name="activity_quarter_{{ $i }}"
+                                                    class="block w-full text-sm text-gray-700 dark:text-gray-300">
+                                                <button
+                                                    class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Yuklash</button>
+                                            </form>
+                                            <div class="w-full md:w-1/3 text-sm text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
+                                                Reja bo'yicha: <span
+
+                                                @php
+                                                    $count = \DB::table('tasks')->where('target_indicator_id', $indicator->id)->where('quarter', $i)->count();
+                                                @endphp
+                                                    class="font-semibold text-gray-800 dark:text-gray-200">{{ $count }}</span>
+                                                ta malumot yuklash kerak
+                                            </div>
+                                            <div class="w-full md:w-1/3 text-center md:text-right text-sm text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
+                                                column
+                                            </div>
+                                        </div>
+                                    </li>
+                                {{-- @endforeach --}}
+                                @endfor
+                            </ul>
+                            @endforeach
+                        </div>
+
+                        <div data-content="settings" class="hidden">
+                            <!-- Example simple settings form -->
+                            <form class="space-y-4">
+                                <div>
+                                    <label class="block text-sm text-gray-600 dark:text-gray-400">Telefon</label>
+                                    <input type="text" name="phone"
+                                        class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md text-gray-800 dark:text-gray-200"
+                                        value="{{ $user->phone }}" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-600 dark:text-gray-400">Email</label>
+                                    <input type="email" name="email"
+                                        class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md text-gray-800 dark:text-gray-200"
+                                        value="{{ $user->email }}" disabled>
+                                </div>
+                                <div class="flex items-center">
+                                    <button type="button"
+                                        class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md text-sm">Tahrirlash</button>
+                                    <button type="button"
+                                        class="ml-3 inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm">Saqlash</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <script>
+                        (function() {
+                            const container = document.getElementById('profileTabs');
+                            if (!container) return;
+                            const tabs = container.querySelectorAll('[data-tab]');
+                            const panes = container.querySelectorAll('[data-content]');
+
+                            function activate(name) {
+                                tabs.forEach(btn => {
+                                    const isActive = btn.getAttribute('data-tab') === name;
+                                    btn.classList.toggle('border-b-2', isActive);
+                                    btn.classList.toggle('border-primary-500', isActive);
+                                    btn.classList.toggle('text-primary-600', isActive);
+                                    btn.classList.toggle('font-medium', isActive);
+                                    btn.classList.toggle('text-gray-500', !isActive);
+                                    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                                });
+                                panes.forEach(p => {
+                                    p.classList.toggle('hidden', p.getAttribute('data-content') !== name);
+                                });
+                            }
+
+                            tabs.forEach(btn => {
+                                btn.addEventListener('click', () => {
+                                    activate(btn.getAttribute('data-tab'));
+                                });
+                            });
+
+                            // default
+                            activate('overview');
+                        })();
+                    </script>
                 </div>
-                @else
-                <div class="p-6 text-center">
-                    <i class="fas fa-inbox text-4xl text-gray-400 dark:text-gray-500 mb-3"></i>
-                    <p class="text-gray-600 dark:text-gray-400">Vazifalar mavjud emas.</p>
-                </div>
-                @endif
-                @if ($user->targetIndicators->isNotEmpty())
-                <div class="p-6">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Maqsad Ko'rsatkichlari</h3>
-                    <ul class="space-y-4">
-                        @foreach ($user->targetIndicators as $indicator)
-                            <li class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white">{{ $indicator->title }}</h4>
-                                <span class="mt-2 text-gray-600 dark:text-gray-300">{{ $indicator->description }}</span>
-                                <form action="">
-                                    <input type="file" class="mt-3 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200" placeholder="Qiymat kiriting">
-                                    <button type="submit" class="mt-3 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300">Yuklash</button>
-                                </form>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-                @else
-                <div class="p-6 text-center">
-                    <i class="fas fa-inbox text-4xl text-gray-400 dark:text-gray-500 mb-3"></i>
-                    <p class="text-gray-600 dark:text-gray-400">Maqsad ko'rsatkichlari mavjud emas.</p>
-                </div>
-                @endif
             </div>
             <!-- Additional Info Section (if needed in the future) -->
             <div class="mt-6 text-center text-gray-500 dark:text-gray-400 text-sm">

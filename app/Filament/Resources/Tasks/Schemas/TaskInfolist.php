@@ -12,12 +12,12 @@ class TaskInfolist
         return $schema
             ->components([
                 TextEntry::make('name'),
-                TextEntry::make('target_indicator_id')
-                    ->numeric(),
+                TextEntry::make('targetIndicator.name')
+                    ->label('Target Indicator')
+                    ->placeholder('-'),
                 TextEntry::make('quarter')
                     ->badge(),
-                TextEntry::make('user_id')
-                    ->numeric()
+                TextEntry::make('user.name')
                     ->placeholder('-'),
                 TextEntry::make('created_at')
                     ->dateTime()

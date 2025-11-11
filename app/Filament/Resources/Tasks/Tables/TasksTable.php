@@ -23,9 +23,15 @@ class TasksTable
                 ->label('Target Indicator')
                 ->searchable(),
 
+            TextColumn::make('name')
+                ->label('Sarlavha')
+                ->searchable()
+                ->sortable(),
+
             TextColumn::make('user.name')
                 ->label('Foydalanuvchi')
-                ->searchable(),
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault: false),
 
             TextColumn::make('created_at')
                 ->label('Yaratilgan vaqt')

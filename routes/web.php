@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-Route::get('dashboard',[ProfileController::class, 'show'] )->name('dashboard');
+Route::post('/logout', [ProfileController::class, 'logout'])->name('logout');
+Route::get('dashboard',[ProfileController::class, 'show'] )->name('dashboard')->middleware(['auth', 'verified']);
 Route::get('/hemis/redirect', [HemisAuthController::class, 'redirectToHemis'])->name('hemis.redirect');
 Route::get('/hemis/callback', [HemisAuthController::class, 'login'])->name('hemis.callback');
