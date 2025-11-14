@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('target_indicator_id')->constrained()->onDelete('cascade');
             $table->enum('quarter', ['1', '2', '3', '4']);
             $table->foreignId('user_id')->nullable()->constrained();
+            $table->string('year');
             $table->timestamps();
         });
     }

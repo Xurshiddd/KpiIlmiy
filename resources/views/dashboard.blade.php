@@ -26,18 +26,131 @@
             }
         }
     </script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    {{-- Toast Notifications Container --}}
+    <div id="toast-container" class="fixed top-6 right-6 z-50 space-y-3"></div>
+
     <div class="min-h-screen py-8 px-4">
         <div class="mx-auto">
             <!-- Profile Card -->
+            <script>
+                class Toast {
+                    static show(message, type = 'info', duration = 5000) {
+                        const container = document.getElementById('toast-container');
+
+                        // Type ranglar
+                        const typeStyles = {
+                            success: {
+                                bg: 'bg-green-100',
+                                border: 'border-green-400',
+                                text: 'text-green-700',
+                                icon: '✓'
+                            },
+                            error: {
+                                bg: 'bg-red-100',
+                                border: 'border-red-400',
+                                text: 'text-red-700',
+                                icon: '✕'
+                            },
+                            warning: {
+                                bg: 'bg-yellow-100',
+                                border: 'border-yellow-400',
+                                text: 'text-yellow-700',
+                                icon: '⚠'
+                            },
+                            info: {
+                                bg: 'bg-blue-100',
+                                border: 'border-blue-400',
+                                text: 'text-blue-700',
+                                icon: 'ℹ'
+                            }
+                        };
+
+                        const style = typeStyles[type] || typeStyles.info;
+
+                        const toast = document.createElement('div');
+                        toast.className = `${style.bg} border ${style.border} ${style.text} px-4 py-3 rounded shadow-lg`;
+                        toast.innerHTML = `
+                            <div class="flex items-start">
+                                <span class="font-bold mr-3">${style.icon}</span>
+                                <span>${message}</span>
+                                <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-lg leading-none">&times;</button>
+                            </div>
+                        `;
+
+                        container.appendChild(toast);
+
+                        // Avtomatik o'chiriladi 5 soniyadan keyin
+                        setTimeout(() => {
+                            toast.classList.add('animate-fade-out');
+                            setTimeout(() => toast.remove(), 300);
+                        }, duration);
+                    }
+
+                    static success(message, duration = 5000) {
+                        this.show(message, 'success', duration);
+                    }
+
+                    static error(message, duration = 5000) {
+                        this.show(message, 'error', duration);
+                    }
+
+                    static warning(message, duration = 5000) {
+                        this.show(message, 'warning', duration);
+                    }
+
+                    static info(message, duration = 5000) {
+                        this.show(message, 'info', duration);
+                    }
+                }
+
+                // Session flash messages (success/error) - 5 soniya ko'rsatiladi
+                @if (session('success'))
+                    Toast.success("{{ session('success') }}", 5000);
+                @endif
+
+                @if (session('error'))
+                    Toast.error("{{ session('error') }}", 5000);
+                @endif
+
+                // Validation errors - 5 soniya ko'rsatiladi
+                @if ($errors->any())
+                    const errorMessages = {!! json_encode($errors->all()) !!};
+                    errorMessages.forEach(error => {
+                        Toast.error(error, 5000);
+                    });
+                @endif
+            </script>
+
+            {{-- Fade out animation --}}
+            <style>
+                @keyframes fadeOut {
+                    0% {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                    100% {
+                        opacity: 0;
+                        transform: translateX(100%);
+                    }
+                }
+
+                .animate-fade-out {
+                    animation: fadeOut 0.3s ease-in-out forwards;
+                }
+            </style>
             <div
                 class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
                 <!-- Header with gradient -->
                 <div
                     class="relative h-40 bg-gradient-to-r from-primary-500 to-primary-700 dark:from-primary-700 dark:to-primary-900">
-                    <div class="absolute inset-0 bg-black/10 dark:bg-black/20"></div>
+                    <div class="absolute inset-0 bg-black/10 dark:bg-black/20">
+
+                    </div>
                     <div class="absolute bottom-4 right-6 flex items-center">
                         <span
                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/90 dark:bg-gray-800/90 text-primary-700 dark:text-primary-300 backdrop-blur-sm">
@@ -206,7 +319,8 @@
 
                     <div class="mt-4">
                         <div data-content="overview" class="">
-                            <p class="text-gray-600 dark:text-gray-400">Qo'shimcha ma'lumotlar uchun bo'lim tanlang.</p>
+                            <p class="text-gray-600 dark:text-gray-400">Qo'shimcha ma'lumotlar uchun bo'lim tanlang.
+                            </p>
                             <!-- Example overview content -->
                             <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div
@@ -245,37 +359,107 @@
                                     {{ $indicator->name }}</h2>
 
 
-                            <ul class="space-y-3">
-                                @for ($i = 1; $i < 5; $i++)
-                                {{-- @foreach ($user->targetIndicators->tasks as $task) --}}
-                                    <h3 class="text-gray-600 dark:text-gray-400">{{ $i }} - chorak</h3>
-                                    <li class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                                        <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
-                                            <form action="" class="w-full md:w-1/3 flex items-center gap-3 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-3"
-                                                enctype="multipart/form-data">
-                                                @csrf
-                                                <input type="file" name="activity_quarter_{{ $i }}"
-                                                    class="block w-full text-sm text-gray-700 dark:text-gray-300">
-                                                <button
-                                                    class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Yuklash</button>
-                                            </form>
-                                            <div class="w-full md:w-1/3 text-sm text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
-                                                Reja bo'yicha: <span
+                                <ul class="space-y-3">
+                                    @for ($i = 1; $i < 5; $i++)
+                                        {{-- @foreach ($user->targetIndicators->tasks as $task) --}}
+                                        <h3 class="text-gray-600 dark:text-gray-400">{{ $i }} - chorak</h3>
+                                        <li
+                                            class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                            <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
+                                                <div x-data="{ open: false }" class="w-full md:w-1/3 flex items-center justify-center">
+                                                    <button @click="open = true"
+                                                        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                        Rejadagi fayllarni yuklash
+                                                    </button>
 
-                                                @php
-                                                    $count = \DB::table('tasks')->where('target_indicator_id', $indicator->id)->where('quarter', $i)->count();
-                                                @endphp
-                                                    class="font-semibold text-gray-800 dark:text-gray-200">{{ $count }}</span>
-                                                ta malumot yuklash kerak
+                                                    <!-- Modal -->
+                                                    <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center">
+                                                        <div class="fixed inset-0 bg-black/50" @click="open = false" aria-hidden="true"></div>
+
+                                                        <div @click.away="open = false" @keydown.escape.window="open = false" x-trap="open"
+                                                            role="dialog" aria-modal="true"
+                                                            class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg mx-4 p-6 z-50">
+                                                            <div class="flex justify-between items-center mb-4">
+                                                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                                                    Reja uchun fayllarni yuklash — {{ $indicator->name }} ({{ $i }}-chorak)
+                                                                </h3>
+                                                                <button type="button" @click="open = false"
+                                                                    class="text-gray-500 hover:text-gray-700 dark:text-gray-300 text-2xl leading-none">&times;</button>
+                                                            </div>
+
+                                                            <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                                                                @csrf
+                                                                <input type="hidden" name="quarter" value="{{ $i }}">
+
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                        Sarlavha <span class="text-red-500">*</span>
+                                                                    </label>
+                                                                    <input type="text" name="title" required
+                                                                        class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-400 dark:focus:ring-primary-600"
+                                                                        placeholder="Maqola sarlavhasi">
+                                                                </div>
+
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mazmuni</label>
+                                                                    <textarea name="content" rows="4"
+                                                                        class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-400 dark:focus:ring-primary-600"
+                                                                        placeholder="Maqola mazmuni"></textarea>
+                                                                </div>
+
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                        Maqola (PDF) <span class="text-red-500">*</span>
+                                                                    </label>
+                                                                    <div class="mt-2">
+                                                                        <input type="file" name="filesDoc" accept=".pdf" required
+                                                                            class="w-full text-sm text-gray-700 dark:text-gray-300 file:border file:rounded-md file:px-4 file:py-2 file:bg-white dark:file:bg-gray-800 file:border-gray-300 dark:file:border-gray-700 file:text-sm file:font-medium hover:file:bg-gray-50">
+                                                                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Faqat PDF formatda yuklang.</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rasm fayli (ixtiyoriy)</label>
+                                                                    <div class="mt-2">
+                                                                        <input type="file" name="filesImg" accept="image/*"
+                                                                            class="w-full text-sm text-gray-700 dark:text-gray-300 file:border file:rounded-md file:px-4 file:py-2 file:bg-white dark:file:bg-gray-800 file:border-gray-300 dark:file:border-gray-700 file:text-sm file:font-medium hover:file:bg-gray-50">
+                                                                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Rasm (jpg, png, webp) — ixtiyoriy.</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="flex justify-end items-center gap-3 pt-2">
+                                                                    <button type="button" @click="open = false"
+                                                                        class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none">
+                                                                        Bekor qilish
+                                                                    </button>
+                                                                    <button type="submit"
+                                                                        class="inline-flex items-center px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white focus:outline-none shadow-sm">
+                                                                        Yuklash
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+
+                                                    <style>[x-cloak]{display:none !important}</style>
+                                                </div>
+                                                <div
+                                                    class="w-full md:w-1/3 text-sm text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
+                                                    Reja bo'yicha: <span
+                                                        @php
+                                                            $count = \DB::table('tasks')->where('target_indicator_id', $indicator->id)->where('quarter', $i)->count(); @endphp
+                                                        class="font-semibold text-gray-800 dark:text-gray-200">{{ $count }}</span>
+                                                    ta malumot yuklash kerak
+                                                </div>
+                                                <div
+                                                    class="w-full md:w-1/3 text-center md:text-right text-sm text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
+                                                    column
+                                                </div>
                                             </div>
-                                            <div class="w-full md:w-1/3 text-center md:text-right text-sm text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
-                                                column
-                                            </div>
-                                        </div>
-                                    </li>
-                                {{-- @endforeach --}}
-                                @endfor
-                            </ul>
+                                        </li>
+                                        {{-- @endforeach --}}
+                                    @endfor
+                                </ul>
                             @endforeach
                         </div>
 

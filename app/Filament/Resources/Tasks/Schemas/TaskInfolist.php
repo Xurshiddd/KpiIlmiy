@@ -17,8 +17,8 @@ class TaskInfolist
                     ->placeholder('-'),
                 TextEntry::make('quarter')
                     ->badge(),
-                TextEntry::make('user.name')
-                    ->placeholder('-'),
+                // TextEntry::make('user.name')
+                //     ->placeholder('-'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),

@@ -28,11 +28,15 @@ class TasksTable
                 ->searchable()
                 ->sortable(),
 
-            TextColumn::make('user.name')
-                ->label('Foydalanuvchi')
+            // TextColumn::make('user.name')
+            //     ->label('Foydalanuvchi')
+            //     ->searchable()
+            //     ->toggleable(isToggledHiddenByDefault: false),
+            TextColumn::make('year')
+                ->label('Yil')
                 ->searchable()
-                ->toggleable(isToggledHiddenByDefault: false),
-
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('created_at')
                 ->label('Yaratilgan vaqt')
                 ->dateTime()

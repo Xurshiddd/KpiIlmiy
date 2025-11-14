@@ -12,6 +12,7 @@ class Task extends Model
         'target_indicator_id',
         'quarter',
         'user_id',
+        'year',
     ];
     public function targetIndicator()
     {
