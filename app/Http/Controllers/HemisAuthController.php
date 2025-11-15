@@ -44,7 +44,9 @@ class HemisAuthController extends Controller
                 ['employee_id_number' => $userData['employee_id_number']],
                 [
                     'name' => $userData['name'],
-                    'email' => $userData['email'] ?? strtolower($userData['firstname']).$userData['employee_id'].'@gmail.com',
+                    'email' => !empty($userData['email'])
+                        ? $userData['email']
+                        : strtolower($userData['firstname']) . $userData['employee_id'] . '@gmail.com',
                     'first_name' => $userData['firstname'],
                     'last_name' => $userData['surname'],
                     'phone' => $userData['phone'] ?? null,
@@ -56,7 +58,7 @@ class HemisAuthController extends Controller
             event(new UserInfoEvent($employee, $userData['departments'], $userData['picture_full']));
             Auth::login($employee, true);
             return redirect()->route('dashboard');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('home')->withErrors(['error' => 'Failed to login with Hemis: ' . $e->getMessage()]);
         }
     }
