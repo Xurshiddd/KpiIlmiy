@@ -133,6 +133,7 @@
                         opacity: 1;
                         transform: translateX(0);
                     }
+
                     100% {
                         opacity: 0;
                         transform: translateX(100%);
@@ -307,10 +308,10 @@
                         <nav class="-mb-px flex space-x-6" aria-label="Tabs" role="tablist">
                             <button role="tab" data-tab="overview"
                                 class="py-2 px-3 border-b-2 border-primary-500 text-primary-600 font-medium text-sm"
-                                aria-selected="true">Maqsad ko'rsatkichlar</button>
+                                aria-selected="true">Asosiy</button>
                             <button role="tab" data-tab="activities"
                                 class="py-2 px-3 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                                aria-selected="false">Activities</button>
+                                aria-selected="false">Maqola va rejalar</button>
                             <button role="tab" data-tab="settings"
                                 class="py-2 px-3 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                                 aria-selected="false">Settings</button>
@@ -319,26 +320,33 @@
 
                     <div class="mt-4">
                         <div data-content="overview" class="">
-                            <p class="text-gray-600 dark:text-gray-400">Qo'shimcha ma'lumotlar uchun bo'lim tanlang.
-                            </p>
                             <!-- Example overview content -->
                             <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div
-                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    @foreach ($user->targetIndicators as $indicator)
-                                        <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
-                                            {{ $indicator->name }}</p>
-                                        <hr>
-                                        <form action="" class="m-3">
-                                            @csrf
-                                            <input type="file" name="target_indicator_{{ $indicator->id }}">
-                                            <button
-                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Yuklash</button>
-                                        </form>
-                                    @endforeach
+                                <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <h3>Maqolalar uchun patent yuklash</h3>
+                                    <form action="" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="mt-2">
+                                        <div>
+                                            <label for="article">Maqolani tanlash</label>
+                                            <select name="article" id="article" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md text-gray-800 dark:text-gray-200">
+                                                <option value="">Maqolani tanlang</option>
+                                                @foreach ($user->articles as $article)
+                                                    <option value="{{ $article->id }}">{{ $article->title }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label for="patent">Patent faylini yuklash (PDF)</label>
+                                            <input type="file" name="patent" id="patent" accept=".pdf" class="mt-1 block w-full text-gray-800 dark:text-gray-200">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md">Yuklash</button>
+                                    </div>
+                                    </form>
                                 </div>
-                                <div
-                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') - 1 }} -
                                         Yil</p>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">34</p>
@@ -362,37 +370,54 @@
                                 <ul class="space-y-3">
                                     @for ($i = 1; $i < 5; $i++)
                                         {{-- @foreach ($user->targetIndicators->tasks as $task) --}}
+                                        @php
+                                            $count = \DB::table('tasks')
+                                                ->where('target_indicator_id', $indicator->id)
+                                                ->where('quarter', $i)
+                                                ->count();
+                                        @endphp
                                         <h3 class="text-gray-600 dark:text-gray-400">{{ $i }} - chorak</h3>
                                         <li
                                             class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                                             <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
-                                                <div x-data="{ open: false }" class="w-full md:w-1/3 flex items-center justify-center">
-                                                    <button @click="open = true"
-                                                        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                <div x-data="{ open: false }"
+                                                    class="w-full md:w-1/3 flex items-center justify-center">
+                                                    <button @click="open = true" @disabled($count == 0 || $user->articles->count() >= $count)
+                                                        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400">
                                                         Rejadagi fayllarni yuklash
                                                     </button>
 
                                                     <!-- Modal -->
-                                                    <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center">
-                                                        <div class="fixed inset-0 bg-black/50" @click="open = false" aria-hidden="true"></div>
+                                                    <div x-show="open" x-cloak
+                                                        class="fixed inset-0 z-50 flex items-center justify-center">
+                                                        <div class="fixed inset-0 bg-black/50" @click="open = false"
+                                                            aria-hidden="true"></div>
 
-                                                        <div @click.away="open = false" @keydown.escape.window="open = false" x-trap="open"
+                                                        <div @click.away="open = false"
+                                                            @keydown.escape.window="open = false" x-trap="open"
                                                             role="dialog" aria-modal="true"
                                                             class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg mx-4 p-6 z-50">
                                                             <div class="flex justify-between items-center mb-4">
-                                                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                                                                    Reja uchun fayllarni yuklash — {{ $indicator->name }} ({{ $i }}-chorak)
+                                                                <h3
+                                                                    class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                                                    Reja uchun fayllarni yuklash —
+                                                                    {{ $indicator->name }}
+                                                                    ({{ $i }}-chorak)
                                                                 </h3>
                                                                 <button type="button" @click="open = false"
                                                                     class="text-gray-500 hover:text-gray-700 dark:text-gray-300 text-2xl leading-none">&times;</button>
                                                             </div>
 
-                                                            <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                                                            <form action="{{ route('articles.store') }}"
+                                                                method="POST" enctype="multipart/form-data"
+                                                                class="space-y-6">
                                                                 @csrf
-                                                                <input type="hidden" name="quarter" value="{{ $i }}">
+                                                                <input type="hidden" name="quarter"
+                                                                    value="{{ $i }}">
 
                                                                 <div>
-                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    <label
+                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                                         Sarlavha <span class="text-red-500">*</span>
                                                                     </label>
                                                                     <input type="text" name="title" required
@@ -401,29 +426,40 @@
                                                                 </div>
 
                                                                 <div>
-                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mazmuni</label>
+                                                                    <label
+                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mazmuni</label>
                                                                     <textarea name="content" rows="4"
                                                                         class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-400 dark:focus:ring-primary-600"
                                                                         placeholder="Maqola mazmuni"></textarea>
                                                                 </div>
 
                                                                 <div>
-                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                        Maqola (PDF) <span class="text-red-500">*</span>
+                                                                    <label
+                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                        Maqola (PDF) <span
+                                                                            class="text-red-500">*</span>
                                                                     </label>
                                                                     <div class="mt-2">
-                                                                        <input type="file" name="filesDoc" accept=".pdf" required
+                                                                        <input type="file" name="filesDoc"
+                                                                            accept=".pdf" required
                                                                             class="w-full text-sm text-gray-700 dark:text-gray-300 file:border file:rounded-md file:px-4 file:py-2 file:bg-white dark:file:bg-gray-800 file:border-gray-300 dark:file:border-gray-700 file:text-sm file:font-medium hover:file:bg-gray-50">
-                                                                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Faqat PDF formatda yuklang.</p>
+                                                                        <p
+                                                                            class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                                            Faqat PDF formatda yuklang.</p>
                                                                     </div>
                                                                 </div>
 
                                                                 <div>
-                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rasm fayli (ixtiyoriy)</label>
+                                                                    <label
+                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rasm
+                                                                        fayli (ixtiyoriy)</label>
                                                                     <div class="mt-2">
-                                                                        <input type="file" name="filesImg" accept="image/*"
+                                                                        <input type="file" name="filesImg"
+                                                                            accept="image/*"
                                                                             class="w-full text-sm text-gray-700 dark:text-gray-300 file:border file:rounded-md file:px-4 file:py-2 file:bg-white dark:file:bg-gray-800 file:border-gray-300 dark:file:border-gray-700 file:text-sm file:font-medium hover:file:bg-gray-50">
-                                                                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Rasm (jpg, png, webp) — ixtiyoriy.</p>
+                                                                        <p
+                                                                            class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                                            Rasm (jpg, png, webp) — ixtiyoriy.</p>
                                                                     </div>
                                                                 </div>
 
@@ -441,19 +477,46 @@
                                                         </div>
                                                     </div>
 
-                                                    <style>[x-cloak]{display:none !important}</style>
+                                                    <style>
+                                                        [x-cloak] {
+                                                            display: none !important
+                                                        }
+                                                    </style>
                                                 </div>
                                                 <div
                                                     class="w-full md:w-1/3 text-sm text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
                                                     Reja bo'yicha: <span
-                                                        @php
-                                                            $count = \DB::table('tasks')->where('target_indicator_id', $indicator->id)->where('quarter', $i)->count(); @endphp
                                                         class="font-semibold text-gray-800 dark:text-gray-200">{{ $count }}</span>
                                                     ta malumot yuklash kerak
                                                 </div>
-                                                <div
-                                                    class="w-full md:w-1/3 text-center md:text-right text-sm text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
-                                                    column
+                                                <div class="w-full md:w-1/3 text-center md:text-right text-sm text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
+                                                    Yuklangan: <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $user->articles->where('quarter', $i)->count() }}</span> ta
+                                                    @if ($user->articles->where('quarter', $i)->count() > 0)
+                                                        <div class="mt-3 space-y-2 max-h-48 overflow-y-auto">
+                                                            @foreach ($user->articles->where('quarter', $i) as $article)
+                                                                <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded text-xs">
+                                                                    <div class="flex-1">
+                                                                        <p class="font-medium text-gray-800 dark:text-gray-200">{{ $article->title }}</p>
+                                                                    </div>
+                                                                    <div class="flex items-center gap-2 ml-2">
+                                                                        <a href="#"
+                                                                            class="text-primary-600 hover:text-primary-700 dark:text-primary-400">
+                                                                            <i class="fas fa-eye"></i>
+                                                                        </a>
+                                                                        <form action="#" method="POST" class="inline">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit" onclick="return confirm('Rostdan ham o\'chirasizmi?')"
+                                                                                class="text-red-600 hover:text-red-700 dark:text-red-400">
+                                                                                <i class="fas fa-trash"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                    </table>
                                                 </div>
                                             </div>
                                         </li>

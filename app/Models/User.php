@@ -65,5 +65,8 @@ class User extends Authenticatable
         return $this->belongsToMany(TargetIndicator::class, 'merges')
             ->withTimestamps();
     }
-
+    public function articles()
+    {
+        return $this->hasMany(Article::class,'author_id');
+    }
 }
