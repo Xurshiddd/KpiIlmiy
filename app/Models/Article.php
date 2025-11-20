@@ -11,7 +11,7 @@ class Article extends Model
         'content',
         'author_id',
         'views',
-        'quarter',
+        'quarter'
     ];
     public function author()
     {
@@ -19,10 +19,14 @@ class Article extends Model
     }
     public function filesDoc()
     {
-        return $this->morphOne(Attachment::class, 'attachment');
+        return $this->morphOne(Attachment::class, 'attachment')->where('extra_identifier', 'document');
     }
     public function filesImg()
     {
-        return $this->morphOne(Attachment::class, 'attachment');
+        return $this->morphOne(Attachment::class, 'attachment')->where('extra_identifier', 'image');
+    }
+    public function patent()
+    {
+        return $this->morphOne(Attachment::class, 'attachment')->where('extra_identifier', 'patent');
     }
 }

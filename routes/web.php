@@ -14,4 +14,7 @@ Route::get('/hemis/redirect', [HemisAuthController::class, 'redirectToHemis'])->
 Route::get('/hemis/callback', [HemisAuthController::class, 'login'])->name('hemis.callback');
 Route::middleware('auth')->group(function () {
     Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
+    Route::put('articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+    Route::post('articles/patent', [ArticleController::class, 'uploadPatent'])->name('articles.uploadPatent');
+    Route::get('patent-status/{article}', [ArticleController::class, 'getPatentStatus'])->name('articles.patentStatus');
 });

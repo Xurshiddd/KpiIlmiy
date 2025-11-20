@@ -317,24 +317,27 @@
                                 aria-selected="false">Settings</button>
                         </nav>
                     </div>
-
                     <div class="mt-4">
                         <div data-content="overview" class="">
                             <!-- Example overview content -->
                             <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                                     <h3>Maqolalar uchun patent yuklash</h3>
-                                    <form action="" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('articles.uploadPatent') }}" method="POST" enctype="multipart/form-data" id="patentForm">
                                     @csrf
                                     <div class="mt-2">
                                         <div>
                                             <label for="article">Maqolani tanlash</label>
-                                            <select name="article" id="article" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md text-gray-800 dark:text-gray-200">
+                                            <select name="article_id" id="article" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md text-gray-800 dark:text-gray-200">
                                                 <option value="">Maqolani tanlang</option>
                                                 @foreach ($user->articles as $article)
                                                     <option value="{{ $article->id }}">{{ $article->title }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                        <div class="mt-4" id="patentStatus">
+                                            <p class="m-3 text-green-700">Bu maqola uchun allaqachon patent yuklangan</p>
+                                            <a href="" id="patent_url" class="m-3 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md">ko'rish</a>
                                         </div>
                                         <div class="mt-4">
                                             <label for="patent">Patent faylini yuklash (PDF)</label>
@@ -347,15 +350,17 @@
                                     </form>
                                 </div>
                                 <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') - 1 }} -
-                                        Yil</p>
-                                    <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">34</p>
-                                </div>
-                                <div
-                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') }} - Yil
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->subYear()->format('Y') }} - Yil</p>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
+                                        {{ $user->articles()->whereYear('created_at', now()->subYear()->year)->count() }} / {{ $user->targetIndicators[0]->tasks->where('year', now()->subYear()->year)->count() }}
                                     </p>
-                                    <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">34</p>
+                                </div>
+
+                                <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') }} - Yil</p>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
+                                        {{ $user->articles()->whereYear('created_at', now()->year)->count() }} / {{ $user->targetIndicators[0]->tasks->where('year', now()->year)->count() }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -466,7 +471,7 @@
                                                                 <div class="flex justify-end items-center gap-3 pt-2">
                                                                     <button type="button" @click="open = false"
                                                                         class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none">
-                                                                        Bekor qilish
+                                                                        Bekor qilish{ asset('storage/' . $article->filesDoc->path) }}
                                                                     </button>
                                                                     <button type="submit"
                                                                         class="inline-flex items-center px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white focus:outline-none shadow-sm">
@@ -498,19 +503,76 @@
                                                                     <div class="flex-1">
                                                                         <p class="font-medium text-gray-800 dark:text-gray-200">{{ $article->title }}</p>
                                                                     </div>
+
                                                                     <div class="flex items-center gap-2 ml-2">
-                                                                        <a href="#"
+
+                                                                        <a href="{{ asset('storage/' . $article->filesDoc->path) }}" target="_blank"
                                                                             class="text-primary-600 hover:text-primary-700 dark:text-primary-400">
                                                                             <i class="fas fa-eye"></i>
                                                                         </a>
-                                                                        <form action="#" method="POST" class="inline">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit" onclick="return confirm('Rostdan ham o\'chirasizmi?')"
-                                                                                class="text-red-600 hover:text-red-700 dark:text-red-400">
-                                                                                <i class="fas fa-trash"></i>
+                                                                        <div x-data="{ openEdit: false }" class="flex items-center gap-2">
+                                                                            <!-- Edit button (opens modal) -->
+                                                                            <button @click="openEdit = true" type="button"
+                                                                                class="text-primary-600 hover:text-primary-700 dark:text-primary-400">
+                                                                                <i class="fas fa-edit"></i>
                                                                             </button>
-                                                                        </form>
+
+                                                                            <!-- Edit Modal -->
+                                                                            <div x-show="openEdit" x-cloak class="fixed inset-0 z-50 flex items-center justify-center">
+                                                                                <div class="fixed inset-0 bg-black/50" @click="openEdit = false" aria-hidden="true"></div>
+
+                                                                                <div @click.away="openEdit = false" @keydown.escape.window="openEdit = false" x-trap="openEdit"
+                                                                                    role="dialog" aria-modal="true"
+                                                                                    class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg mx-4 p-6 z-50">
+                                                                                    <div class="flex justify-between items-center mb-4">
+                                                                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Maqolani tahrirlash</h3>
+                                                                                        <button type="button" @click="openEdit = false"
+                                                                                            class="text-gray-500 hover:text-gray-700 dark:text-gray-300 text-2xl leading-none">&times;</button>
+                                                                                    </div>
+
+                                                                                    <form action="{{ route('articles.update', $article->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                                                                                        @csrf
+                                                                                        @method('PUT')
+                                                                                        <input type="hidden" name="quarter" value="{{ old('quarter', $article->quarter) }}">
+                                                                                        <div>
+                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sarlavha <span class="text-red-500">*</span></label>
+                                                                                            <input type="text" name="title" required value="{{ old('title', $article->title) }}"
+                                                                                                class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200"
+                                                                                                placeholder="Maqola sarlavhasi">
+                                                                                        </div>
+
+                                                                                        <div>
+                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mazmuni</label>
+                                                                                            <textarea name="content" rows="4"
+                                                                                                class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200"
+                                                                                                placeholder="Maqola mazmuni">{{ old('content', $article->content) }}</textarea>
+                                                                                        </div>
+
+                                                                                        <div>
+                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Maqola (PDF)</label>
+                                                                                            <input type="file" name="filesDoc" accept=".pdf"
+                                                                                                class="mt-2 w-full text-sm text-gray-700 dark:text-gray-300">
+                                                                                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Yangi fayl yuklash shart emas — mavjud fayl saqlanadi.</p>
+                                                                                        </div>
+
+                                                                                        <div>
+                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rasm fayli (ixtiyoriy)</label>
+                                                                                            <input type="file" name="filesImg" accept="image/*"
+                                                                                                class="mt-2 w-full text-sm text-gray-700 dark:text-gray-300">
+                                                                                        </div>
+
+                                                                                        <div class="flex justify-end items-center gap-3 pt-2">
+                                                                                            <button type="button" @click="openEdit = false"
+                                                                                                class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">Bekor qilish</button>
+                                                                                            <button type="submit"
+                                                                                                class="inline-flex items-center px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white">Saqlash</button>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <style>[x-cloak]{display:none!important}</style>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             @endforeach
@@ -552,6 +614,32 @@
                     </div>
 
                     <script>
+                        var patientStatus = document.getElementById('patentStatus');
+                        patientStatus.style.display = 'none';
+                        var patent_url = document.getElementById('patent_url');
+                        document.getElementById('article').addEventListener('change', function() {
+                            var articleId = this.value;
+                            if (!articleId) {
+                                patientStatus.style.display = 'none';
+                                return;
+                            }
+                            fetch('patent-status/' + articleId)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(data);
+
+                                    if (data.status === 'uploaded') {
+                                        patientStatus.style.display = 'block';
+                                        patent_url.href = '/storage/' + data.patent_url;
+                                    } else {
+                                        patientStatus.style.display = 'none';
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching patent status:', error);
+                                    patientStatus.style.display = 'none';
+                                });
+                        });
                         (function() {
                             const container = document.getElementById('profileTabs');
                             if (!container) return;

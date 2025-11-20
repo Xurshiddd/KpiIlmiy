@@ -16,7 +16,7 @@ class TargetIndicator extends Model
     ];
     public function priorityTask()
     {
-        return $this->belongsTo(PriorityTask::class);
+        return $this->belongsTo(PriorityTask::class)->where('status', true);
     }
     public function tasks()
     {

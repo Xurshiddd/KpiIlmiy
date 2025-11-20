@@ -13,6 +13,6 @@ class PriorityTask extends Model
     ];
     public function targetIndicators()
     {
-        return $this->hasMany(TargetIndicator::class);
+        return $this->hasMany(TargetIndicator::class)->where('status', true);
     }
 }
