@@ -25,6 +25,7 @@ class ArticleController extends Controller
                 'content' => $validated['content'] ?? null,
                 'author_id' => $validated['author_id'],
                 'quarter' => $validated['quarter'],
+                'task_id' => $validated['task_id']
             ]
         );
         event(new AttachmentEvent($validated['filesDoc'], $article->filesDoc(), 'articles', 'document'));

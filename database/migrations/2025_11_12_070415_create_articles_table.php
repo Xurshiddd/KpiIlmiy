@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('author_id')->constrained('users');
             $table->integer('views')->default(0);
             $table->integer('quarter');
+            $table->foreignId('task_id')->constrained('tasks');
             $table->timestamps();
         });
     }

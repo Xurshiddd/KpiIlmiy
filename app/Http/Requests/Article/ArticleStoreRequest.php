@@ -27,6 +27,7 @@ class ArticleStoreRequest extends FormRequest
             'quarter' => 'required|integer|min:1|max:4',
             'filesDoc' => 'required|file|mimes:pdf|max:102428',
             'filesImg' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:10024',
+            'task_id' => 'required|exists:tasks,id',
         ];
     }
 }

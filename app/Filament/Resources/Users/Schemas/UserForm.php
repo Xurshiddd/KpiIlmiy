@@ -13,7 +13,8 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 TextInput::make('email')
                     ->label('Email address')
                     ->email()

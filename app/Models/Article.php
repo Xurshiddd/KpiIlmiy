@@ -11,7 +11,8 @@ class Article extends Model
         'content',
         'author_id',
         'views',
-        'quarter'
+        'quarter',
+        'task_id'
     ];
     public function author()
     {
@@ -28,5 +29,9 @@ class Article extends Model
     public function patent()
     {
         return $this->morphOne(Attachment::class, 'attachment')->where('extra_identifier', 'patent');
+    }
+    public function task()
+    {
+        return $this->belongsTo(Task::class, 'task_id');
     }
 }

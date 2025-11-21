@@ -359,7 +359,11 @@
                                 <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') }} - Yil</p>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
-                                        {{ $user->articles()->whereYear('created_at', now()->year)->count() }} / {{ $user->targetIndicators[0]->tasks->where('year', now()->year)->count() }}
+                                        @php
+                                        $indicator = $user->targetIndicators->first();
+                                        $targetTasksThisYear = $indicator ? $indicator->tasks()->whereYear('created_at', now()->year)->count() : 0;
+                                        @endphp
+                                        {{ $user->articles()->whereYear('created_at', now()->year)->count() }} / {{ $targetTasksThisYear }}
                                     </p>
                                 </div>
                             </div>
@@ -374,7 +378,6 @@
 
                                 <ul class="space-y-3">
                                     @for ($i = 1; $i < 5; $i++)
-                                        {{-- @foreach ($user->targetIndicators->tasks as $task) --}}
                                         @php
                                             $count = \DB::table('tasks')
                                                 ->where('target_indicator_id', $indicator->id)
@@ -382,12 +385,11 @@
                                                 ->count();
                                         @endphp
                                         <h3 class="text-gray-600 dark:text-gray-400">{{ $i }} - chorak</h3>
-                                        <li
-                                            class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                        <li class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                                             <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
                                                 <div x-data="{ open: false }"
                                                     class="w-full md:w-1/3 flex items-center justify-center">
-                                                    <button @click="open = true" @disabled($count == 0 || $user->articles->count() >= $count)
+                                                    <button @click="open = true" @disabled($count == 0 || $user->articles->where('quarter', $i)->count() >= $count)
                                                         class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400">
                                                         Rejadagi fayllarni yuklash
                                                     </button>
@@ -419,10 +421,19 @@
                                                                 @csrf
                                                                 <input type="hidden" name="quarter"
                                                                     value="{{ $i }}">
-
-                                                                <div>
+                                                               <div>
+                                                                    <label for="task">Task</label>
+                                                                    <select name="task_id" id="task" required
+                                                                        class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-400 dark:focus:ring-primary-600">
+                                                                        <option value="">Rejadagi vazifani tanlang</option>
+                                                                        @foreach ($indicator->tasks->where('quarter', $i) as $task)
+                                                                            <option value="{{ $task->id }}" @disabled($user->articles->contains('task_id', $task->id))>
+                                                                                {{ $task->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
                                                                     <label
-                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mt-3">
                                                                         Sarlavha <span class="text-red-500">*</span>
                                                                     </label>
                                                                     <input type="text" name="title" required
@@ -471,7 +482,7 @@
                                                                 <div class="flex justify-end items-center gap-3 pt-2">
                                                                     <button type="button" @click="open = false"
                                                                         class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none">
-                                                                        Bekor qilish{ asset('storage/' . $article->filesDoc->path) }}
+                                                                        Bekor qilish
                                                                     </button>
                                                                     <button type="submit"
                                                                         class="inline-flex items-center px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white focus:outline-none shadow-sm">

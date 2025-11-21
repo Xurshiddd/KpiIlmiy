@@ -24,11 +24,11 @@ class TaskForm
                     ->required(),
                 Select::make('year')
                     ->options(function () {
-                        $currentYear = date('Y');
-                        $currentYear = (int)$currentYear -1;
+                        $currentYear = (int) date('Y') - 1;
                         $years = [];
                         for ($i = $currentYear; $i <= $currentYear + 1; $i++) {
-                            $years[$i] = (string)$i."-".$i+1;
+                            $label = $i . '-' . ($i + 1);
+                            $years[$label] = $label;
                         }
                         return $years;
                     })
