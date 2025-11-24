@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 
 class PriorityTaskResource extends Resource
 {
+    protected static ?string $navigationLabel = 'Ustuvor vazifa';
     protected static ?string $model = PriorityTask::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

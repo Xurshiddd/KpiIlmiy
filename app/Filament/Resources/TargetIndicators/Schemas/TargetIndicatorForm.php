@@ -29,8 +29,9 @@ class TargetIndicatorForm
                     ->label('O\'lchov birligi'),
                 TextInput::make('count_value')
                     ->integer()
+                    ->hidden()
                     ->label('Count Value')
-                    ->default(true),
+                    ->default(1),
             ]);
     }
 }

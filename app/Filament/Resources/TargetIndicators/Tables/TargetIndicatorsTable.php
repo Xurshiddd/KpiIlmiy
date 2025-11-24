@@ -15,7 +15,7 @@ class TargetIndicatorsTable
     {
         return $table
             ->columns([
-                TextColumn::make('priorityTask.name')->label('Priority Task')->limit(50),
+                TextColumn::make('priorityTask.name')->label('Ustuvor vazifalar')->limit(50),
                 TextColumn::make('name')->label('Name')->limit(50),
                 TextColumn::make('description')->label('Description')->limit(50),
                 ToggleColumn::make('status')->label('Status'),

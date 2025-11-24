@@ -16,6 +16,7 @@ use Filament\Tables\Table;
 
 class TargetIndicatorResource extends Resource
 {
+    protected static ?string $navigationLabel = 'Maqsad ko\'rsatkichlari';
     protected static ?string $model = TargetIndicator::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
