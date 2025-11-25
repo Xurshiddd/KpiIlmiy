@@ -16,6 +16,7 @@ use Filament\Tables\Table;
 
 class MergeResource extends Resource
 {
+    protected static ?string $navigationLabel = 'Biriktirish';
     protected static ?string $model = Merge::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
