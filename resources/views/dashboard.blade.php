@@ -321,49 +321,69 @@
                         <div data-content="overview" class="">
                             <!-- Example overview content -->
                             <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div
+                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                                     <h3>Maqolalar uchun patent yuklash</h3>
-                                    <form action="{{ route('articles.uploadPatent') }}" method="POST" enctype="multipart/form-data" id="patentForm">
-                                    @csrf
-                                    <div class="mt-2">
-                                        <div>
-                                            <label for="article">Maqolani tanlash</label>
-                                            <select name="article_id" id="article" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md text-gray-800 dark:text-gray-200">
-                                                <option value="">Maqolani tanlang</option>
-                                                @foreach ($user->articles as $article)
-                                                    <option value="{{ $article->id }}">{{ $article->title }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="mt-4" id="patentStatus">
-                                            <p class="m-3 text-green-700">Bu maqola uchun allaqachon patent yuklangan</p>
-                                            <a href="" id="patent_url" class="m-3 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md">ko'rish</a>
+                                    <form action="{{ route('articles.uploadPatent') }}" method="POST"
+                                        enctype="multipart/form-data" id="patentForm">
+                                        @csrf
+                                        <div class="mt-2">
+                                            <div>
+                                                <label for="article">Maqolani tanlash</label>
+                                                <select name="article_id" id="article"
+                                                    class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md text-gray-800 dark:text-gray-200">
+                                                    <option value="">Maqolani tanlang</option>
+                                                    @foreach ($user->articles as $article)
+                                                        <option value="{{ $article->id }}">{{ $article->title }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="mt-4" id="patentStatus">
+                                                <p class="m-3 text-green-700">Bu maqola uchun allaqachon patent
+                                                    yuklangan</p>
+                                                <a href="" id="patent_url"
+                                                    class="m-3 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md">ko'rish</a>
+                                            </div>
+                                            <div class="mt-4">
+                                                <label for="patent">Patent faylini yuklash (PDF)</label>
+                                                <input type="file" name="patent" id="patent" accept=".pdf"
+                                                    class="mt-1 block w-full text-gray-800 dark:text-gray-200">
+                                            </div>
                                         </div>
                                         <div class="mt-4">
-                                            <label for="patent">Patent faylini yuklash (PDF)</label>
-                                            <input type="file" name="patent" id="patent" accept=".pdf" class="mt-1 block w-full text-gray-800 dark:text-gray-200">
+                                            <button type="submit"
+                                                class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md">Yuklash</button>
                                         </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md">Yuklash</button>
-                                    </div>
                                     </form>
                                 </div>
-                                <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->subYear()->format('Y') }} - Yil</p>
+                                <div
+                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ now()->subYear()->format('Y') }} - Yil</p>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
-                                        {{ $user->articles()->whereYear('created_at', now()->subYear()->year)->count() }} / {{ optional($user->targetIndicators->first())->tasks()->where('year', now()->subYear()->year)->count() ?? 0 }}
+                                        @php
+                                            $target = $user->targetIndicators->first();
+                                        @endphp
+                                        {{ $user->articles()->whereYear('created_at', now()->subYear()->year)->count() }}
+                                        /
+                                        {{ $target?->tasks()->where('year', now()->subYear()->year)->count() ?? 0 }}
                                     </p>
                                 </div>
 
-                                <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') }} - Yil</p>
+                                <div
+                                    class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->format('Y') }} - Yil
+                                    </p>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
                                         @php
-                                        $indicator = $user->targetIndicators->first();
-                                        $targetTasksThisYear = $indicator ? $indicator->tasks()->whereYear('created_at', now()->year)->count() : 0;
+                                            $indicator = $user->targetIndicators->first();
+                                            $targetTasksThisYear = $indicator
+                                                ? $indicator->tasks()->whereYear('created_at', now()->year)->count()
+                                                : 0;
                                         @endphp
-                                        {{ $user->articles()->whereYear('created_at', now()->year)->count() }} / {{ $targetTasksThisYear }}
+                                        {{ $user->articles()->whereYear('created_at', now()->year)->count() }} /
+                                        {{ $targetTasksThisYear }}
                                     </p>
                                 </div>
                             </div>
@@ -385,7 +405,8 @@
                                                 ->count();
                                         @endphp
                                         <h3 class="text-gray-600 dark:text-gray-400">{{ $i }} - chorak</h3>
-                                        <li class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                        <li
+                                            class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                                             <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
                                                 <div x-data="{ open: false }"
                                                     class="w-full md:w-1/3 flex items-center justify-center">
@@ -421,13 +442,15 @@
                                                                 @csrf
                                                                 <input type="hidden" name="quarter"
                                                                     value="{{ $i }}">
-                                                               <div>
+                                                                <div>
                                                                     <label for="task">Task</label>
                                                                     <select name="task_id" id="task" required
                                                                         class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-400 dark:focus:ring-primary-600">
-                                                                        <option value="">Rejadagi vazifani tanlang</option>
+                                                                        <option value="">Rejadagi vazifani
+                                                                            tanlang</option>
                                                                         @foreach ($indicator->tasks->where('quarter', $i) as $task)
-                                                                            <option value="{{ $task->id }}" @disabled($user->articles->contains('task_id', $task->id))>
+                                                                            <option value="{{ $task->id }}"
+                                                                                @disabled($user->articles->contains('task_id', $task->id))>
                                                                                 {{ $task->name }}
                                                                             </option>
                                                                         @endforeach
@@ -505,76 +528,122 @@
                                                         class="font-semibold text-gray-800 dark:text-gray-200">{{ $count }}</span>
                                                     ta malumot yuklash kerak
                                                 </div>
-                                                <div class="w-full md:w-1/3 text-center md:text-right text-sm text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
-                                                    Yuklangan: <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $user->articles->where('quarter', $i)->count() }}</span> ta
+                                                <div
+                                                    class="w-full md:w-1/3 text-center md:text-right text-sm text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
+                                                    Yuklangan: <span
+                                                        class="font-semibold text-gray-800 dark:text-gray-200">{{ $user->articles->where('quarter', $i)->count() }}</span>
+                                                    ta
                                                     @if ($user->articles->where('quarter', $i)->count() > 0)
                                                         <div class="mt-3 space-y-2 max-h-48 overflow-y-auto">
                                                             @foreach ($user->articles->where('quarter', $i) as $article)
-                                                                <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded text-xs">
+                                                                <div
+                                                                    class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded text-xs">
                                                                     <div class="flex-1">
-                                                                        <p class="font-medium text-gray-800 dark:text-gray-200">{{ $article->title }}</p>
+                                                                        <p
+                                                                            class="font-medium text-gray-800 dark:text-gray-200">
+                                                                            {{ $article->title }}</p>
                                                                     </div>
 
                                                                     <div class="flex items-center gap-2 ml-2">
 
-                                                                        <a href="{{ asset('storage/' . $article->filesDoc->path) }}" target="_blank"
+                                                                        <a href="{{ asset('storage/' . $article->filesDoc->path) }}"
+                                                                            target="_blank"
                                                                             class="text-primary-600 hover:text-primary-700 dark:text-primary-400">
                                                                             <i class="fas fa-eye"></i>
                                                                         </a>
-                                                                        <div x-data="{ openEdit: false }" class="flex items-center gap-2">
+                                                                        <div x-data="{ openEdit: false }"
+                                                                            class="flex items-center gap-2">
                                                                             <!-- Edit button (opens modal) -->
-                                                                            <button @click="openEdit = true" type="button"
+                                                                            <button @click="openEdit = true"
+                                                                                type="button"
                                                                                 class="text-primary-600 hover:text-primary-700 dark:text-primary-400">
                                                                                 <i class="fas fa-edit"></i>
                                                                             </button>
 
                                                                             <!-- Edit Modal -->
-                                                                            <div x-show="openEdit" x-cloak class="fixed inset-0 z-50 flex items-center justify-center">
-                                                                                <div class="fixed inset-0 bg-black/50" @click="openEdit = false" aria-hidden="true"></div>
+                                                                            <div x-show="openEdit" x-cloak
+                                                                                class="fixed inset-0 z-50 flex items-center justify-center">
+                                                                                <div class="fixed inset-0 bg-black/50"
+                                                                                    @click="openEdit = false"
+                                                                                    aria-hidden="true"></div>
 
-                                                                                <div @click.away="openEdit = false" @keydown.escape.window="openEdit = false" x-trap="openEdit"
-                                                                                    role="dialog" aria-modal="true"
+                                                                                <div @click.away="openEdit = false"
+                                                                                    @keydown.escape.window="openEdit = false"
+                                                                                    x-trap="openEdit" role="dialog"
+                                                                                    aria-modal="true"
                                                                                     class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg mx-4 p-6 z-50">
-                                                                                    <div class="flex justify-between items-center mb-4">
-                                                                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Maqolani tahrirlash</h3>
-                                                                                        <button type="button" @click="openEdit = false"
+                                                                                    <div
+                                                                                        class="flex justify-between items-center mb-4">
+                                                                                        <h3
+                                                                                            class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                                                                            Maqolani tahrirlash</h3>
+                                                                                        <button type="button"
+                                                                                            @click="openEdit = false"
                                                                                             class="text-gray-500 hover:text-gray-700 dark:text-gray-300 text-2xl leading-none">&times;</button>
                                                                                     </div>
 
-                                                                                    <form action="{{ route('articles.update', $article->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                                                                                    <form
+                                                                                        action="{{ route('articles.update', $article->id) }}"
+                                                                                        method="POST"
+                                                                                        enctype="multipart/form-data"
+                                                                                        class="space-y-4">
                                                                                         @csrf
                                                                                         @method('PUT')
-                                                                                        <input type="hidden" name="quarter" value="{{ old('quarter', $article->quarter) }}">
+                                                                                        <input type="hidden"
+                                                                                            name="quarter"
+                                                                                            value="{{ old('quarter', $article->quarter) }}">
                                                                                         <div>
-                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sarlavha <span class="text-red-500">*</span></label>
-                                                                                            <input type="text" name="title" required value="{{ old('title', $article->title) }}"
+                                                                                            <label
+                                                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sarlavha
+                                                                                                <span
+                                                                                                    class="text-red-500">*</span></label>
+                                                                                            <input type="text"
+                                                                                                name="title" required
+                                                                                                value="{{ old('title', $article->title) }}"
                                                                                                 class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200"
                                                                                                 placeholder="Maqola sarlavhasi">
                                                                                         </div>
 
                                                                                         <div>
-                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mazmuni</label>
+                                                                                            <label
+                                                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mazmuni</label>
                                                                                             <textarea name="content" rows="4"
                                                                                                 class="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200"
                                                                                                 placeholder="Maqola mazmuni">{{ old('content', $article->content) }}</textarea>
                                                                                         </div>
 
                                                                                         <div>
-                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Maqola (PDF)</label>
-                                                                                            <input type="file" name="filesDoc" accept=".pdf"
+                                                                                            <label
+                                                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Maqola
+                                                                                                (PDF)</label>
+                                                                                            <input type="file"
+                                                                                                name="filesDoc"
+                                                                                                accept=".pdf"
                                                                                                 class="mt-2 w-full text-sm text-gray-700 dark:text-gray-300">
-                                                                                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Yangi fayl yuklash shart emas — mavjud fayl saqlanadi.</p>
+                                                                                            <p
+                                                                                                class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                                                                Yangi fayl yuklash shart
+                                                                                                emas — mavjud fayl
+                                                                                                saqlanadi.</p>
                                                                                         </div>
 
                                                                                         <div>
-                                                                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rasm fayli (ixtiyoriy)</label>
-                                                                                            <input type="file" name="filesImg" accept="image/*"
+                                                                                            <label
+                                                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rasm
+                                                                                                fayli
+                                                                                                (ixtiyoriy)</label>
+                                                                                            <input type="file"
+                                                                                                name="filesImg"
+                                                                                                accept="image/*"
                                                                                                 class="mt-2 w-full text-sm text-gray-700 dark:text-gray-300">
                                                                                         </div>
 
-                                                                                        <div class="flex justify-end items-center gap-3 pt-2">
-                                                                                            <button type="button" @click="openEdit = false"
-                                                                                                class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">Bekor qilish</button>
+                                                                                        <div
+                                                                                            class="flex justify-end items-center gap-3 pt-2">
+                                                                                            <button type="button"
+                                                                                                @click="openEdit = false"
+                                                                                                class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">Bekor
+                                                                                                qilish</button>
                                                                                             <button type="submit"
                                                                                                 class="inline-flex items-center px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white">Saqlash</button>
                                                                                         </div>
@@ -582,7 +651,11 @@
                                                                                 </div>
                                                                             </div>
 
-                                                                            <style>[x-cloak]{display:none!important}</style>
+                                                                            <style>
+                                                                                [x-cloak] {
+                                                                                    display: none !important
+                                                                                }
+                                                                            </style>
                                                                         </div>
                                                                     </div>
                                                                 </div>
