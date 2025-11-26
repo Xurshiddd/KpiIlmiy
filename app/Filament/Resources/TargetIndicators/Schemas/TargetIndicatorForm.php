@@ -27,11 +27,11 @@ class TargetIndicatorForm
                     ->label('Status'),
                 TextInput::make('count_name')
                     ->label('O\'lchov birligi'),
-                TextInput::make('count_value')
-                    ->integer()
-                    ->hidden()
-                    ->label('Count Value')
-                    ->default(1),
+                // TextInput::make('count_value')
+                //     ->integer()
+                //     ->default(fn() => 1)
+                //     ->hidden()
+                //     ->label('Count Value'),
             ]);
     }
 }

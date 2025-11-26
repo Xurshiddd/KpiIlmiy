@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->boolean('status')->default(true);
             $table->string('count_name');
-            $table->integer('count_value');
+            $table->integer('count_value')->default(1);
             $table->timestamps();
         });
     }
