@@ -352,7 +352,7 @@
                                 <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->subYear()->format('Y') }} - Yil</p>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
-                                        {{ $user->articles()->whereYear('created_at', now()->subYear()->year)->count() }} / {{ $user->targetIndicators[0] ?? $user->targetIndicators[0]->tasks->where('year', now()->subYear()->year)->count()}}
+                                        {{ $user->articles()->whereYear('created_at', now()->subYear()->year)->count() }} / {{ optional($user->targetIndicators->first())->tasks()->where('year', now()->subYear()->year)->count() ?? 0 }}
                                     </p>
                                 </div>
 
