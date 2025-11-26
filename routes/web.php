@@ -3,9 +3,11 @@
 use App\Http\Controllers\HemisAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArticleController;
+use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
-    return view('welcome');
+    $articles = Article::orderBy('created_at', 'desc')->paginate(2);
+    return view('welcome', compact('articles'));
 })->name('home');
 Route::post('/logout', [ProfileController::class, 'logout'])->name('logout');
 Route::get('dashboard',[ProfileController::class, 'show'] )->name('dashboard')->middleware(['auth', 'verified']);

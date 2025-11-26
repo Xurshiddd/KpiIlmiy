@@ -60,7 +60,6 @@
                     @else
                         <a href="{{ route('hemis.redirect') }}"
                             class="inline-flex items-center px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50">Kirish</a>
-
                     @endif
                     <a href="/admin/login"
                         class="inline-flex items-center px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50">Admin</a>
@@ -120,39 +119,41 @@
 
                     <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <!-- Article card repeated -->
-                        <article class="bg-gray-50 rounded-lg overflow-hidden border">
-                            <img class="w-full card-img"
-                                src="https://images.unsplash.com/photo-1532619675605-0d07a0049a45?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder"
-                                alt="Maqola rasmi" />
-                            <div class="p-4">
-                                <a href="#" class="text-sm text-indigo-600 font-medium">Tadqiqot</a>
-                                <h3 class="mt-2 font-semibold text-lg"><a href="#">Ilmiy tadqiqotlarda yangi metod
-                                        — qisqacha tanishtirish</a></h3>
-                                <p class="mt-2 text-sm text-gray-600">Bu maqolada biz yangi metodologiyani qisqacha
-                                    ko'rib chiqamiz va amaliy misollar bilan ko'rsatamiz.</p>
-                                <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                                    <div>Muallif: <span class="text-gray-700">Dr. A. Karimov</span></div>
-                                    <time datetime="2025-10-20">Oct 20, 2025</time>
-                                </div>
-                            </div>
-                        </article>
+                        @foreach ($articles as $article)
+                            <div x-data="{ open: false }">
+                                <article class="bg-gray-50 rounded-lg overflow-hidden border cursor-pointer"
+                                    @click="open = true">
+                                    <img class="w-full card-img"
+                                        src="{{ $article->filesImg->path ? asset('storage/' . $article->filesImg->path) : asset('article_image.jpg') }}"
+                                        alt="Maqola rasmi" />
 
-                        <article class="bg-gray-50 rounded-lg overflow-hidden border">
-                            <img class="w-full card-img"
-                                src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder"
-                                alt="Maqola rasmi" />
-                            <div class="p-4">
-                                <a href="#" class="text-sm text-indigo-600 font-medium">Ta'lim</a>
-                                <h3 class="mt-2 font-semibold text-lg"><a href="#">Yangi o'quv dasturlari va
-                                        talabalar uchun qo'llanma</a></h3>
-                                <p class="mt-2 text-sm text-gray-600">O'quv dasturlarini yangilash bo'yicha tavsiyalar
-                                    va amaliy maslahatlar.</p>
-                                <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                                    <div>Muallif: <span class="text-gray-700">M. Islomov</span></div>
-                                    <time datetime="2025-09-30">Sep 30, 2025</time>
+                                    <div class="p-4">
+                                        <h3 class="mt-2 font-semibold text-lg">{{ $article->title }}</h3>
+                                        <p class="mt-2 text-sm text-gray-600 line-clamp-3">{{ $article->content }}</p>
+                                        <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
+                                            <div>Muallif: <span
+                                                    class="text-gray-700">{{ $article->author->name }}</span></div>
+                                            <time>{{ $article->created_at->format('M d, Y') }}</time>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                {{-- PDF Modal --}}
+                                <div x-show="open" x-transition
+                                    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                                    <div class="bg-white w-11/12 md:w-3/4 h-[90vh] rounded-lg shadow-xl relative p-4">
+
+                                        {{-- Close --}}
+                                        <button @click="open = false"
+                                            class="absolute top-2 right-2 text-red-700 hover:text-black text-xl m-3">×</button>
+
+                                        {{-- PDF Viewer --}}
+                                        <iframe src="{{ asset('storage/' . $article->filesDoc->path) }}"
+                                            class="w-full h-full rounded"></iframe>
+                                    </div>
                                 </div>
                             </div>
-                        </article>
+                        @endforeach
 
                         <!-- Add more article cards as needed -->
                     </div>
@@ -160,10 +161,7 @@
                     <!-- Pagination -->
                     <div class="mt-6 flex justify-center">
                         <nav class="inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                            <a href="#" class="px-3 py-2 rounded-l-md border bg-white text-sm">Oldingi</a>
-                            <a href="#" class="px-3 py-2 border bg-white text-sm">1</a>
-                            <a href="#" class="px-3 py-2 border bg-white text-sm">2</a>
-                            <a href="#" class="px-3 py-2 border bg-white text-sm">Keyingi</a>
+                            {{ $articles->links() }}
                         </nav>
                     </div>
                 </div>
@@ -224,6 +222,7 @@
             </div>
         </footer>
     </main>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </body>
 
