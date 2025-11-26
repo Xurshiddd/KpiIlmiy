@@ -40,7 +40,7 @@ class UserResource extends Resource
     {
         $currentYear = now()->year;
         $lastYear = $currentYear - 1;
-        $years = date('n') >= 9 ? (string)$currentYear . "-" . (string)($currentYear + 1) : (string)($currentYear - 1) . "-" . (string)$currentYear;
+        $years = date('n') >= 9 ? (string) $currentYear . "-" . (string) ($currentYear + 1) : (string) ($currentYear - 1) . "-" . (string) $currentYear;
         $columns = [
             // 1. User Name
             TextColumn::make('name')
@@ -95,7 +95,10 @@ class UserResource extends Resource
                     return $query->count();
                 }),
         ];
-        return $table->columns($columns);
+        return $table->modifyQueryUsing(
+            fn($query) =>
+            $query->where('email', '!=', 'admin@gmail.com')
+        )->columns($columns);
     }
     public static function getRelations(): array
     {

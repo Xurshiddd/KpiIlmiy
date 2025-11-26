@@ -20,7 +20,9 @@ class MergeForm
                     ->required(),
                 Select::make('user_ids')
                     ->label('Foydalanuvchilar')
-                    ->options(User::pluck('name', 'id'))
+                    ->options(
+                        User::where('email', '!=', 'admin@gmail.com')->pluck('name', 'id')
+                    )
                     ->multiple()
                     ->searchable()
                     ->required(),
