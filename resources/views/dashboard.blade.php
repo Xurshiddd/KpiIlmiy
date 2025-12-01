@@ -399,10 +399,12 @@
                                 <ul class="space-y-3">
                                     @for ($i = 1; $i < 5; $i++)
                                         @php
+                                        $t_ids = $indicator->tasks->pluck('id');
                                             $count = \DB::table('tasks')
                                                 ->where('target_indicator_id', $indicator->id)
                                                 ->where('quarter', $i)
                                                 ->count();
+
                                         @endphp
                                         <h3 class="text-gray-600 dark:text-gray-400">{{ $i }} - chorak</h3>
                                         <li
@@ -410,7 +412,7 @@
                                             <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
                                                 <div x-data="{ open: false }"
                                                     class="w-full md:w-1/3 flex items-center justify-center">
-                                                    <button @click="open = true" @disabled($count == 0 || $user->articles->where('quarter', $i)->count() >= $count)
+                                                    <button @click="open = true" @disabled($count == 0 || $user->articles->where('quarter', $i)->whereIn('task_id', $t_ids)->count() >= $count)
                                                         class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400">
                                                         Rejadagi fayllarni yuklash
                                                     </button>
@@ -531,9 +533,9 @@
                                                 <div
                                                     class="w-full md:w-1/3 text-center md:text-right text-sm text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-lg p-5">
                                                     Yuklangan: <span
-                                                        class="font-semibold text-gray-800 dark:text-gray-200">{{ $user->articles->where('quarter', $i)->count() }}</span>
+                                                        class="font-semibold text-gray-800 dark:text-gray-200">{{ $user->articles->where('quarter', $i)->whereIn('task_id', $t_ids)->count() }}</span>
                                                     ta
-                                                    @if ($user->articles->where('quarter', $i)->count() > 0)
+                                                    @if ($user->articles->where('quarter', $i)->whereIn('task_id', $t_ids)->count() > 0)
                                                         <div class="mt-3 space-y-2 max-h-48 overflow-y-auto">
                                                             @foreach ($user->articles->where('quarter', $i) as $article)
                                                                 <div

@@ -16,4 +16,5 @@ class EditMerge extends EditRecord
             DeleteAction::make(),
         ];
     }
+    
 }

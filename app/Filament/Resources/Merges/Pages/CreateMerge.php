@@ -28,7 +28,6 @@ class CreateMerge extends CreateRecord
             ->success()
             ->send();
 
-        // Yangi yozuv qaytarilmaydi (shunchaki birinchi yozuvni qaytaraylik)
         return Merge::where('target_indicator_id', $targetId)->first();
     }
 }

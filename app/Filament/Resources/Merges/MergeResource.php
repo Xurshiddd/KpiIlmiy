@@ -23,8 +23,16 @@ class MergeResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return MergeForm::configure($schema);
+        if (request()->routeIs('filament.admin.resources.merges.create')) {
+            // CREATE form
+            return MergeForm::createForm($schema);
+        }
+
+        // EDIT form
+        return MergeForm::editForm($schema);
     }
+
+
 
     public static function table(Table $table): Table
     {
