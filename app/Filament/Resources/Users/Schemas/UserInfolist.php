@@ -73,6 +73,7 @@ class UserInfolist
                         // Show article image (or default). Clicking the image will open the PDF if a PDF file is available.
                         ImageEntry::make('filesImg')
                             ->label('Maqola')
+                            ->height(80)
                             ->getStateUsing(fn($record) => match (true) {
                                 \is_string($record->filesImg) && $record->filesImg !== '' => asset("storage/{$record->filesImg}"),
                                 \is_object($record->filesImg) && isset($record->filesImg->path) => asset("storage/{$record->filesImg->path}"),
@@ -92,12 +93,12 @@ class UserInfolist
                                 default => null,
                             })
                             ->openUrlInNewTab(),
-                        // maqolalar pdf patentini ko'rsatish nomi chiqsin bosganda pdf ochilsin
+
                         ImageEntry::make('patent')
                             ->label('Patent')
                             ->getStateUsing(fn($record) => match (true) {
                                 default => asset('Patented-Stamp.png'),
-                            })
+                            })->height(80)
                             ->url(fn($record) => match (true) {
                                 \is_string($record->patent) && str_ends_with($record->patent, '.pdf') => asset("storage/{$record->patent}"),
                                 \is_object($record->patent) && isset($record->patent->path) && str_ends_with($record->patent->path, '.pdf') => asset("storage/{$record->patent->path}"),
@@ -108,9 +109,7 @@ class UserInfolist
                         TextEntry::make('content')
                             ->label('Mazmun')
                             ->placeholder('-'),
-                    ])->columns(3),
-
-
+                    ])->columns(6)->columnSpanFull(),
             ]);
     }
 }

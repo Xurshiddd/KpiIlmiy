@@ -27,6 +27,5 @@ class AppServiceProvider extends ServiceProvider
             UserInfoListener::class
         );
         Schema::defaultStringLength(191);
-
     }
 }
