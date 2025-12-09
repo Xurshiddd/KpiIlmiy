@@ -70,7 +70,7 @@ class UserInfolist
                         TextEntry::make('task.quarter')
                             ->label('Chorak')
                             ->placeholder('-'),
-                        // Show article image (or default). Clicking the image will open the PDF if a PDF file is available.
+
                         ImageEntry::make('filesImg')
                             ->label('Maqola')
                             ->height(80)
@@ -109,6 +109,7 @@ class UserInfolist
                         TextEntry::make('content')
                             ->label('Mazmun')
                             ->placeholder('-'),
+
                     ])->columns(6)->columnSpanFull(),
             ]);
     }
