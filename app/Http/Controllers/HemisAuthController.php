@@ -40,6 +40,7 @@ class HemisAuthController extends Controller
             if (!$userData) {
                 return abort(500, 'Failed to retrieve user data from Hemis');
             }
+            dd($userData);
             $employee = User::updateOrCreate(
                 ['employee_id_number' => $userData['employee_id_number']],
                 [
