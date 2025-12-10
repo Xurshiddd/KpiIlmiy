@@ -19,7 +19,12 @@ class BlogPostsChart extends ChartWidget
     // }
     protected function getData(): array
     {
-        $users = User::withCount('articles')->get();
+        $users = User::withCount('articles')
+            ->whereHas('infos', function ($q) {
+                $q->where('staffPosition', 'Professor');
+            })
+            ->get();
+
         return [
             'datasets' => [
                 [
